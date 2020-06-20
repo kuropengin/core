@@ -106,6 +106,7 @@ return [
                             throw new Error("Unknown command: " + name);
                         commands[name].exec(args);
                     };
+                    
                     return cmds;
                 })(),
                 http: new EventEmitter(),

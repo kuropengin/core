@@ -2,7 +2,7 @@ define(function(require, exports, module) {
     main.consumes = [
         "Plugin", "c9", "fs", "layout", "commands", "menus", "settings", "ui", 
         "tabManager", "dialog.question", "dialog.file", 
-        "dialog.fileoverwrite", "dialog.error", "error_handler", "vfs.log"
+        "dialog.fileoverwrite", "dialog.error", "error_handler", "vfs.log","proc"
     ];
     main.provides = ["save"];
     return main;
@@ -21,6 +21,8 @@ define(function(require, exports, module) {
         var showSaveAs = imports["dialog.file"].show;
         var showError = imports["dialog.error"].show;
         var logger = imports["vfs.log"];
+        var proc = imports.proc;
+        
         
         var dirname = require("path").dirname;
         
@@ -452,7 +454,13 @@ define(function(require, exports, module) {
                     
                     setSavingState(tab, "saved", options.timeout, options.noUi);
                     settings.save();
-                    logger.log("Successfully saved " + path);
+                    
+                    proc.execFile('logger' ,{ args: ["-p","local0.info","saved " + path]}, function(){
+                        
+                    });
+                    
+                    
+                    
                 }
                 
                 emit("afterSave", { 

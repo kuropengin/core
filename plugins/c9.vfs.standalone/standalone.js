@@ -19,6 +19,7 @@ var extend = require("util")._extend;
 var resolve = require("path").resolve;
 var basename = require("path").basename;
 var frontdoor = require("frontdoor");
+var child_process = require('child_process');
 
 function plugin(options, imports, register) {
     var previewHandler = imports["preview.handler"];

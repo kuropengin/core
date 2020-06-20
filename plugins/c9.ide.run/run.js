@@ -9,6 +9,7 @@ define(function(require, module, exports) {
         var Plugin = imports.Plugin;
         var settings = imports.settings;
         var proc = imports.proc;
+        var logger = imports.proc;
         var util = imports.util;
         var fs = imports.fs;
         var c9 = imports.c9;
@@ -218,6 +219,18 @@ define(function(require, module, exports) {
             options.path = c9.toExternalPath(options.path, "/");
             options.cwd = makeAbsolutePath(options.cwd);
             
+            var runPath = "";
+            try{
+                runPath = "/" + options.path.split('/workspace/')[1];
+            }catch (error){
+                runPath = options.path;
+            }
+            
+            
+            logger.execFile('logger' ,{ args: ["-p","local0.info","run " + runPath ]}, function(){
+                        
+            });
+            
             var proc = new Process(name, runner, options, callback);
             processes.push(proc);
             
@@ -352,6 +365,7 @@ define(function(require, module, exports) {
                 
                 cwd = insertVariables(cwd, options);
                 console.log(cmd);
+                
                 // Execute run.sh
                 proc.tmux(cmd, {
                     session: procName,
@@ -365,9 +379,10 @@ define(function(require, module, exports) {
                     validatePath: true,
                     testing: testing
                 }, function(err, pty, processId) {
-                    if (err)
+                    if (err){
+                           
                         return callback(err);
-
+                    }
                     // Set process variable for later use
                     process = pty;
                     pid = processId;
